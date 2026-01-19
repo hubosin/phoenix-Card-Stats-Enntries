@@ -1,3 +1,5 @@
+console.log("main.js loaded");
+
 function gradeLabel(str) {
   if (!str) return "";
   if (str.includes("9")) return "Freshman";
@@ -32,7 +34,10 @@ function makeCard(card) {
 
   el.innerHTML = `
     <img class="bg" src="card-template.svg">
-    <img class="photo" src="${card.Image}" onerror="this.src='images/placeholder.png'">
+
+    <img class="photo"
+         src="${card.Image}"
+         onerror="this.src='images/placeholder.png'">
 
     <div class="text name">${card.Name}</div>
     <div class="text grade">${gradeLabel(card["Grade level"])}</div>
