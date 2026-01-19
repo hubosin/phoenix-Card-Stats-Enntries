@@ -2,13 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Card Viewer</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Physics Cards</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #111;
+      font-family: Arial, sans-serif;
+    }
+
+    #card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      background: none;
+    }
+  </style>
 </head>
 <body>
-  <h1>Card Viewer</h1>
+
+  <h1 style="color:white">Physics Cards</h1>
+
   <div id="card-grid"></div>
 
-  <script src="script.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
