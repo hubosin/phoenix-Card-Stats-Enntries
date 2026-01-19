@@ -1,36 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Physics Cards</title>
 
   <style>
     body {
-      margin: 0;
-      padding: 20px;
       background: #111;
+      color: white;
       font-family: Arial, sans-serif;
+      padding: 20px;
     }
 
-    #card-grid {
+    #grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, 260px);
       gap: 20px;
     }
 
-    svg {
+    .card {
+      position: relative;
+      width: 260px;
+      height: 420px;
+    }
+
+    .card img.bg {
       width: 100%;
-      height: auto;
-      background: none;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+    }
+
+    .card img.photo {
+      position: absolute;
+      top: 70px;
+      left: 30px;
+      width: 200px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .text {
+      position: absolute;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .name {
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .grade {
+      top: 42px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .weight { top: 210px; left: 15px; }
+    .activity { top: 230px; left: 15px; }
+
+    .length { top: 260px; left: 15px; }
+    .height { top: 280px; left: 15px; }
+    .hyp { top: 300px; left: 15px; }
+
+    .speed { top: 260px; right: 15px; }
+    .accel { top: 280px; right: 15px; }
+    .force { top: 300px; right: 15px; }
+
+    .work { top: 330px; left: 15px; }
+    .power { top: 330px; right: 15px; }
+
+    .hp {
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <h1 style="color:white">Physics Cards</h1>
+<h1>Physics Cards</h1>
+<div id="grid"></div>
 
-  <div id="card-grid"></div>
-
-  <script src="main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
