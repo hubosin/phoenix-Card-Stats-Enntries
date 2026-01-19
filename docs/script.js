@@ -1,52 +1,72 @@
-const DATA_URL = "data.json"; // path to your NDJSON file
-const IMAGE_PATH = "images/";
-const PLACEHOLDER_IMG = "images/placeholder.png";
-
-// fetch the NDJSON file and parse each line
-async function fetchCards() {
-    try {
-        const res = await fetch(DATA_URL);
-        if (!res.ok) throw new Error("Failed to fetch data.json");
-        const text = await res.text();
-
-        // split by lines and parse each JSON line
-        const lines = text.split("\n").filter(line => line.trim().length > 0);
-        const cards = lines.map(line => JSON.parse(line));
-        return cards;
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
+async function loadSVG() {
+  const res = await fetch("card-template.svg");
+  const text = await res.text();
+  return new DOMParser().parseFromString(text, "image/svg+xml").documentElement;
 }
 
-// create card element
-function createCardElement(card) {
-    const div = document.createElement("div");
-    div.className = "card";
-
-    // image
-    const img = document.createElement("img");
-    img.src = card.Image ? IMAGE_PATH + card.Image : PLACEHOLDER_IMG;
-    img.onerror = () => img.src = PLACEHOLDER_IMG;
-    div.appendChild(img);
-
-    // display ID
-    const idEl = document.createElement("p");
-    idEl.innerHTML = `<strong>ID:</strong> ${card.ID}`;
-    div.appendChild(idEl);
-
-    return div;
+function gradeLabel(str) {
+  if (!str) return "";
+  if (str.includes("9")) return "Freshman";
+  if (str.includes("10")) return "Sophomore";
+  if (str.includes("11")) return "Junior";
+  if (str.includes("12")) return "Senior";
+  return str;
 }
 
-// render all cards
-async function renderCards() {
-    const container = document.getElementById("card-grid");
-    container.innerHTML = "";
-    const cards = await fetchCards();
-    cards.forEach(card => {
-        const cardEl = createCardElement(card);
-        container.appendChild(cardEl);
-    });
+function calculate(card) {
+  const l = card["Horizantal distance"];
+  const h = card["Vertical distane"];
+  const t = card["Time(S)"];
+  const m = card["Mass(Kgs)"];
+
+  const hyp = Math.sqrt(l*l + h*h);
+  const speed = hyp / t;
+  const accel = speed / t;
+  const force = m * accel;
+  const work = force * hyp;
+  const power = work / t;
+  const hp = power / 745.7;
+
+  return { l, h, hyp, speed, accel, force, work, power, hp };
 }
 
-renderCards();
+function fill(svg, card) {
+  const s = calculate(card);
+
+  svg.querySelector("#name").textContent = card.Name;
+  svg.querySelector("#grade").textContent = gradeLabel(card["Grade level"]);
+  svg.querySelector("#weight").textContent = `Weight: ${card["Mass(Kgs)"].toFixed(1)} kg`;
+  svg.querySelector("#activity").textContent = `Activity: ${card.Use}`;
+
+  svg.querySelector("#length").textContent = `Length: ${s.l}`;
+  svg.querySelector("#height").textContent = `Height: ${s.h}`;
+  svg.querySelector("#hypotenuse").textContent = `Hyp: ${s.hyp.toFixed(2)}`;
+
+  svg.querySelector("#speed").textContent = `Speed: ${s.speed.toFixed(2)}`;
+  svg.querySelector("#acceleration").textContent = `Accel: ${s.accel.toFixed(2)}`;
+  svg.querySelector("#force").textContent = `Force: ${s.force.toFixed(2)}`;
+
+  svg.querySelector("#work").textContent = `Work: ${s.work.toFixed(2)}`;
+  svg.querySelector("#power").textContent = `Power: ${s.power.toFixed(2)}`;
+  svg.querySelector("#horsepower").textContent = `${s.hp.toFixed(2)} HP`;
+
+  svg.querySelector("#card-img")
+     .setAttribute("href", card.Image);
+}
+
+async function start() {
+  const res = await fetch("data.json");
+  const lines = (await res.text()).split("\n").filter(Boolean);
+  const cards = lines.map(JSON.parse);
+
+  const template = await loadSVG();
+  const grid = document.getElementById("card-grid");
+
+  cards.forEach(card => {
+    const svg = template.cloneNode(true);
+    fill(svg, card);
+    grid.appendChild(svg);
+  });
+}
+
+start();
