@@ -1,4 +1,5 @@
 function gradeLabel(str) {
+  if (!str) return "";
   if (str.includes("9")) return "Freshman";
   if (str.includes("10")) return "Sophomore";
   if (str.includes("11")) return "Junior";
@@ -58,13 +59,21 @@ function makeCard(card) {
 
 async function start() {
   const res = await fetch("data.json");
-  const cards = (await res.text())
+  const text = await res.text();
+
+  const cards = text
     .split("\n")
-    .filter(Boolean)
-    .map(JSON.parse);
+    .filter(line => line.trim().length > 0)
+    .map(line => JSON.parse(line));
 
   const grid = document.getElementById("grid");
-  cards.forEach(c => grid.appendChild(makeCard(c)));
+
+  if (!cards.length) {
+    console.error("No cards loaded");
+    return;
+  }
+
+  cards.forEach(card => grid.appendChild(makeCard(card)));
 }
 
 start();
