@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: #4ecdc4;
+      color: #000;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background: #45b8b0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #4ecdc4;
+      font-size: 2.5em;
+    }
+
+    .card-image {
+      width: 200px;
+      height: 150px;
+      margin: 20px 0;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .calculations {
+      margin-top: 30px;
+    }
+
+    .calculation-section {
+      margin: 25px 0;
+      padding: 20px;
+      background: #222;
+      border-left: 4px solid #4ecdc4;
+      border-radius: 4px;
+    }
+
+    .calculation-section h2 {
+      color: #4ecdc4;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    .formula {
+      background: #0a0a0a;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      overflow-x: auto;
+    }
+
+    .input-data {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .input-item {
+      background: #0a0a0a;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .input-item label {
+      color: #4ecdc4;
+      font-weight: bold;
+    }
+
+    .input-item value {
+      display: block;
+      color: #fff;
+      margin-top: 5px;
+      font-size: 1.1em;
+    }
+
+    .result {
+      background: #0a0a0a;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+      border: 2px solid #4ecdc4;
+    }
+
+    .result-label {
+      color: #4ecdc4;
+      font-weight: bold;
+    }
+
+    .result-value {
+      color: #fff;
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
+
+    .error {
+      background: #8b0000;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .input-data {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-button">← Back to Cards</a>
+
+  <h1 id="cardName">Card Details</h1>
+  <img id="cardImage" class="card-image" src="" alt="Card Image" style="display:none;">
+
+  <div id="error" class="error" style="display:none;"></div>
+
+  <div class="calculations">
+    <!-- Input Data Section -->
+    <div class="calculation-section">
+      <h2>Input Data</h2>
+      <div class="input-data">
+        <div class="input-item">
+          <label>Horizontal Distance (m):</label>
+          <value id="inputL">-</value>
+        </div>
+        <div class="input-item">
+          <label>Vertical Distance (m):</label>
+          <value id="inputH">-</value>
+        </div>
+        <div class="input-item">
+          <label>Time (s):</label>
+          <value id="inputT">-</value>
+        </div>
+        <div class="input-item">
+          <label>Mass (kg):</label>
+          <value id="inputM">-</value>
+        </div>
+      </div>
+    </div>
+
+    <!-- Distance Calculations -->
+    <div class="calculation-section">
+      <h2>Distance Calculations</h2>
+      <div class="formula">hypotenuse = √(l² + h²)</div>
+      <div class="input-data">
+        <div class="input-item">
+          <label>Hypotenuse (m):</label>
+          <value id="hyp">-</value>
+        </div>
+      </div>
+    </div>
+
+    <!-- Speed Calculation -->
+    <div class="calculation-section">
+      <h2>Speed</h2>
+      <div class="formula">speed = hypotenuse / time</div>
+      <div class="result">
+        <div class="result-label">Speed (m/s):</div>
+        <div class="result-value" id="speed">-</div>
+      </div>
+    </div>
+
+    <!-- Acceleration Calculation -->
+    <div class="calculation-section">
+      <h2>Acceleration</h2>
+      <div class="formula">acceleration = (2 × hypotenuse) / time²</div>
+      <div class="result">
+        <div class="result-label">Acceleration (m/s²):</div>
+        <div class="result-value" id="accel">-</div>
+      </div>
+    </div>
+
+    <!-- Force Calculation -->
+    <div class="calculation-section">
+      <h2>Force</h2>
+      <div class="formula">force = mass × acceleration</div>
+      <div class="result">
+        <div class="result-label">Force (N):</div>
+        <div class="result-value" id="force">-</div>
+      </div>
+    </div>
+
+    <!-- Work Calculation -->
+    <div class="calculation-section">
+      <h2>Work</h2>
+      <div class="formula">work = force × hypotenuse</div>
+      <div class="result">
+        <div class="result-label">Work (J):</div>
+        <div class="result-value" id="work">-</div>
+      </div>
+    </div>
+
+    <!-- Power Calculation -->
+    <div class="calculation-section">
+      <h2>Power</h2>
+      <div class="formula">power = work / time</div>
+      <div class="result">
+        <div class="result-label">Power (W):</div>
+        <div class="result-value" id="power">-</div>
+      </div>
+    </div>
+
+    <!-- Horsepower Calculation -->
+    <div class="calculation-section">
+      <h2>Horsepower</h2>
+      <div class="formula">horsepower = power / 745.7</div>
+      <div class="result">
+        <div class="result-label">Horsepower (hp):</div>
+        <div class="result-value" id="hp">-</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculate(card) {
+    const l = card["Horizantal distance"];
+    const h = card["Vertical distane"];
+    const t = card["Time(S)"];
+    const m = card["Mass(Kgs)"];
+
+    const hyp = Math.sqrt(l*l + h*h);
+    const speed = hyp / t;
+    const accel = (2 * hyp) / (t * t);
+    const force = m * accel;
+    const work = force * hyp;
+    const power = work / t;
+    const hp = power / 745.7;
+
+    return { l, h, hyp, speed, accel, force, work, power, hp };
+  }
+
+  async function loadCardDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const cardName = params.get('name');
+
+    if (!cardName) {
+      showError('No card name provided');
+      return;
+    }
+
+    try {
+      const res = await fetch("data.json");
+      const text = await res.text();
+
+      const cards = text
+        .split("\n")
+        .filter(line => line.trim().length > 0)
+        .map(line => JSON.parse(line));
+
+      const card = cards.find(c => c.Name === cardName);
+
+      if (!card) {
+        showError(`Card "${cardName}" not found`);
+        return;
+      }
+
+      displayCard(card);
+    } catch (error) {
+      showError('Error loading card data: ' + error.message);
+    }
+  }
+
+  function displayCard(card) {
+    const s = calculate(card);
+
+    // Set card name and image
+    document.getElementById('cardName').textContent = card.Name;
+    const imgEl = document.getElementById('cardImage');
+    imgEl.src = card.Image;
+    imgEl.onerror = function() {
+      this.src = 'images/placeholder.png';
+    };
+    imgEl.style.display = 'block';
+
+    // Input data
+    document.getElementById('inputL').textContent = s.l.toFixed(2);
+    document.getElementById('inputH').textContent = s.h.toFixed(2);
+    document.getElementById('inputT').textContent = card["Time(S)"].toFixed(2);
+    document.getElementById('inputM').textContent = card["Mass(Kgs)"].toFixed(2);
+
+    // Results
+    document.getElementById('hyp').textContent = s.hyp.toFixed(4);
+    document.getElementById('speed').textContent = s.speed.toFixed(4);
+    document.getElementById('accel').textContent = s.accel.toFixed(4);
+    document.getElementById('force').textContent = s.force.toFixed(4);
+    document.getElementById('work').textContent = s.work.toFixed(4);
+    document.getElementById('power').textContent = s.power.toFixed(4);
+    document.getElementById('hp').textContent = s.hp.toFixed(4);
+  }
+
+  function showError(message) {
+    document.getElementById('error').textContent = message;
+    document.getElementById('error').style.display = 'block';
+  }
+
+  loadCardDetails();
+</script>
+
+</body>
+</html>
