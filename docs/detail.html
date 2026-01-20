@@ -260,6 +260,11 @@
 </div>
 
 <script>
+  // Base path for GitHub Pages compatibility
+  const basePath = window.location.pathname.includes('/phoenix-Card-Stats-Enntries-main/') 
+    ? '/phoenix-Card-Stats-Enntries-main/docs/'
+    : '/docs/';
+
   function calculate(card) {
     const l = card["Horizantal distance"];
     const h = card["Vertical distane"];
@@ -287,7 +292,7 @@
     }
 
     try {
-      const res = await fetch("data.json");
+      const res = await fetch(`${basePath}data.json`);
       const text = await res.text();
 
       const cards = text
@@ -314,9 +319,9 @@
     // Set card name and image
     document.getElementById('cardName').textContent = card.Name;
     const imgEl = document.getElementById('cardImage');
-    imgEl.src = card.Image;
+    imgEl.src = `${basePath}${card.Image}`;
     imgEl.onerror = function() {
-      this.src = 'images/placeholder.png';
+      this.src = `${basePath}images/placeholder.png`;
     };
     imgEl.style.display = 'block';
 
