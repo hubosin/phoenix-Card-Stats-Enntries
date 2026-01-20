@@ -1,5 +1,10 @@
 console.log("main.js loaded");
 
+// Base path for GitHub Pages compatibility
+const basePath = window.location.pathname.includes('/phoenix-Card-Stats-Enntries-main/') 
+  ? '/phoenix-Card-Stats-Enntries-main/docs/'
+  : '/docs/';
+
 // Position configuration - easily adjust here
 const positions = {
   photo: { top: '70px', left: '30px', width: '200px', height: '120px' },
@@ -57,8 +62,8 @@ function makeCard(card) {
     <img class="bg" src="Card-Template.svg">
 
     <img class="photo"
-         src="${card.Image}"
-         onerror="this.src='images/placeholder.png'">
+         src="${basePath}${card.Image}"
+         onerror="this.src='${basePath}images/placeholder.png'">
 
     <div class="text name">${card.Name}</div>
 
@@ -89,7 +94,7 @@ function makeCard(card) {
 }
 
 async function start() {
-  const res = await fetch("data.json");
+  const res = await fetch(`${basePath}data.json`);
   const text = await res.text();
 
   const cards = text
