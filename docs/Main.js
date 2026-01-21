@@ -1,9 +1,7 @@
 console.log("main.js loaded");
 
-// Base path for GitHub Pages compatibility
-const basePath = window.location.pathname.includes('/phoenix-Card-Stats-Enntries-main/') 
-  ? '/phoenix-Card-Stats-Enntries-main/docs/'
-  : '/docs/';
+// Use relative paths so the site works whether Pages serves docs/ as the site root
+const basePath = ''; // relative to current document (works when docs/ is Pages source)
 
 // Position configuration - easily adjust here
 const positions = {
@@ -94,7 +92,12 @@ function makeCard(card) {
 }
 
 async function start() {
+  // fetch relative data.json (no leading slash)
   const res = await fetch(`${basePath}data.json`);
+  if (!res.ok) {
+    console.error("Failed to load data.json", res.status, res.statusText, res.url);
+    return;
+  }
   const text = await res.text();
 
   const cards = text
